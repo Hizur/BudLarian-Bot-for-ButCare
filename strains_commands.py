@@ -4,10 +4,10 @@ from discord import app_commands
 from strains_utils import get_strain_info, list_strains, parse_producer_filters, parse_producer_includes
 
 def register_strain_commands(client, tree, strains_data):
-    """Registers strain-related commands."""
+    """Rejestruje komendy związane z odmianami."""
 
     @client.command(name="odmiana", help="Wyświetla informacje o danej odmianie.")
-    async def odmiana_prefix(ctx, *, nazwa_odmiany: str = None):
+    async def strain_prefix(ctx, *, nazwa_odmiany: str = None):
         if nazwa_odmiany is None:
             await ctx.send("Proszę podać nazwę odmiany. Użyj: `!odmiana [nazwa odmiany]`")
             return
@@ -21,7 +21,7 @@ def register_strain_commands(client, tree, strains_data):
         await get_strain_info(ctx, nazwa_odmiany, strains_data, ephemeral=False)
 
     @client.command(name="listaodmian", help="Wyświetla listę wszystkich dostępnych odmian. Użyj: -producent (aby wykluczyć), +producent (aby pokazać tylko określonych producentów).")
-    async def listaodmian_prefix(ctx, *args):
+    async def list_strains_prefix(ctx, *args):
         # Parse args to extract producers to exclude or include
         excluded_producers = parse_producer_filters(args)
         included_producers = parse_producer_includes(args)
@@ -36,7 +36,7 @@ def register_strain_commands(client, tree, strains_data):
                           included_producers=included_producers)
 
     @tree.command(name="odmiana", description="Wyświetla informacje o danej odmianie.")
-    async def odmiana_command(interaction: discord.Interaction, nazwa_odmiany: str):
+    async def strain_command(interaction: discord.Interaction, nazwa_odmiany: str):
         try:
             await interaction.response.defer(ephemeral=True)
             nazwa_odmiany = nazwa_odmiany.strip()
@@ -58,7 +58,7 @@ def register_strain_commands(client, tree, strains_data):
         wyklucz="Opcjonalnie: Lista producentów do wykluczenia (np. 'tilray slab')",
         pokaz="Opcjonalnie: Lista producentów do pokazania (np. 'four20 cantourage')"
     )
-    async def listaodmian_command(interaction: discord.Interaction, wyklucz: str = None, pokaz: str = None):
+    async def list_strains_command(interaction: discord.Interaction, wyklucz: str = None, pokaz: str = None):
         try:
             await interaction.response.defer(ephemeral=True)
             
@@ -90,7 +90,7 @@ def register_strain_commands(client, tree, strains_data):
                 print("Failed to send error message")
 
     @tree.command(name="odmiany", description="Wyświetla listę wszystkich dostępnych odmian.")
-    async def odmiany_command(interaction: discord.Interaction):
+    async def strains_command(interaction: discord.Interaction):
         try:
             await interaction.response.defer(ephemeral=True)
             await list_strains(interaction, strains_data, ephemeral=True)

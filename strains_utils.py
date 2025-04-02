@@ -5,7 +5,7 @@ from utils import get_best_match
 from difflib import SequenceMatcher
 from fuzzywuzzy import fuzz
 
-# Map of producers and their keywords (lowercase, no spaces for comparison)
+# Mapa producentów i ich słów kluczowych (małe litery, bez spacji do porównania)
 PRODUCER_KEYWORDS = {
     "Four20 Pharma": ["four20pharma", "four20", "four 20 pharma"],
     "S-LAB": ["s-lab", "slab"],
@@ -23,7 +23,7 @@ PRODUCER_KEYWORDS = {
 
 DEFAULT_PRODUCER = "Inni Producenci"
 
-def _detect_producer(product_name):
+def detect_producer(product_name):
     """Wykrywa nazwę producenta na podstawie nazwy produktu, używając PRODUCER_KEYWORDS."""
     if not product_name:
         return DEFAULT_PRODUCER
@@ -178,7 +178,7 @@ async def get_strain_info(ctx_or_interaction, nazwa_odmiany, strains_data, ephem
             producers = {}
             for strain in matching_strains:
                 # Use the new helper function to detect producer
-                producer = _detect_producer(strain['product_name'])
+                producer = detect_producer(strain['product_name'])
                     
                 if producer not in producers:
                     producers[producer] = []
@@ -289,7 +289,7 @@ async def list_strains(ctx_or_interaction, strains_data, ephemeral=False, exclud
     producers = {}
     for strain in strains_data:
         # Use the helper function to detect producer
-        producer = _detect_producer(strain['product_name'])
+        producer = detect_producer(strain['product_name'])
         
         # Skip if producer is in the excluded list
         if producer in excluded_producers:

@@ -57,12 +57,7 @@ async def list_clinics(ctx_or_interaction, clinics_data):
         for clinic in clinics:
             address = clinic.get("address", "Brak adresu")
             phone = clinic.get("phone", "Brak telefonu")
-            # price = clinic.get("price", "Brak informacji o cenach")
             clinic_url = clinic.get("clinic_url", "#")
-            
-            # Skrócenie cen dla czytelności
-            # if len(price) > 100:
-            #     price = price.split('\n')[0] + "... (więcej szczegółów na stronie kliniki)"
             
             # Przygotuj wpis dla kliniki
             if address == "N/A":
@@ -77,7 +72,6 @@ async def list_clinics(ctx_or_interaction, clinics_data):
             clinic_entry = f"**{city_part}**\n"
             clinic_entry += f"📍 {address}\n"
             clinic_entry += f"📞 {phone}\n"
-            # clinic_entry += f"💰 {price}\n"
             clinic_entry += f"🔗 [Link do strony]({clinic_url})\n\n"
 
             if len(current_field + clinic_entry) > 1000:
@@ -92,7 +86,7 @@ async def list_clinics(ctx_or_interaction, clinics_data):
         # Dodajemy pola dla sieci klinik
         for i, field_content in enumerate(network_clinics):
             field_name = f"__{network_name}__" if i == 0 else f"__{network_name} (część {i+1})__"
-            field_size = len(field_name) + len(field_content)  # Fixed missing closing parenthesis)
+            field_size = len(field_name) + len(field_content)
 
             # Sprawdzamy, czy dodanie nowego pola nie przekroczy limitu
             if current_size + field_size > MAX_EMBED_SIZE:
@@ -253,9 +247,6 @@ async def get_clinic_info(ctx_or_interaction, location_query, clinics_data, ephe
             if clinic.get("website") or clinic.get("clinic_url"):
                 website_url = clinic.get("website") or clinic.get("clinic_url", "#")
                 embed.add_field(name="Strona WWW", value=f"[Kliknij tutaj]({website_url})", inline=True)
-            
-            # if clinic.get("price"):
-            #     embed.add_field(name="Cennik", value=clinic["price"], inline=False)
                 
             if clinic.get("description"):
                 embed.add_field(name="Opis", value=clinic["description"], inline=False)
@@ -414,12 +405,6 @@ async def list_all_clinics(ctx_or_interaction, clinics_data, ephemeral=True):
             website_url = clinic.get("website") or clinic.get("clinic_url")
             if website_url:
                 clinic_entry += f"🔗 [Strona WWW]({website_url})\n"
-                
-            # if clinic.get("price"):
-            #     price_short = clinic["price"]
-            #     if len(price_short) > 50:
-            #         price_short = price_short.split('\n')[0] + "..."
-            #     clinic_entry += f"💰 {price_short}\n"
                 
             clinic_entry += "\n"
 
